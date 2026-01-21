@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Frases - The Office</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0059d5 0%, #00347d 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #0059d5;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            color: #5d5d5d;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .quote-container {
+            background: #f6f6f6;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .quote-text {
+            font-size: 1.5rem;
+            color: #0a0a0a;
+            font-style: italic;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            padding: 0 1rem;
+        }
+
+        .quote-author {
+            font-size: 1.2rem;
+            color: #0059d5;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+
+        .gif-container {
+            margin: 2rem 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .gif-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .generate-btn {
+            background: #0059d5;
+            color: white;
+            border: none;
+            padding: 1rem 3rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 89, 213, 0.3);
+        }
+
+        .generate-btn:hover {
+            background: #00429f;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 89, 213, 0.4);
+        }
+
+        .generate-btn:active {
+            background: #00347d;
+            transform: translateY(0);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .quote-text {
+                font-size: 1.2rem;
+            }
+
+            .container {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📺 The Office</h1>
+        <p class="subtitle">Gerador de Frases Engraçadas</p>
+
+        <div class="quote-container">
+            <div class="quote-text" id="quoteText">
+                Clique no botão para gerar uma frase!
+            </div>
+            <div class="quote-author" id="quoteAuthor"></div>
+        </div>
+
+        <div class="gif-container" id="gifContainer" style="display: none;">
+            <img id="gifImage" src="" alt="GIF do personagem">
+        </div>
+
+        <button class="generate-btn" onclick="generateQuote()">🎲 Nova Frase</button>
+    </div>
+
+    <script>
+        const quotes = [
+            {
+                text: "Não me pareça estúpido. É a minha terra. Eu não vou me parecer estúpido na minha terra.",
+                author: "Michael Scott",
+                gif: "https://media.giphy.com/media/l0MYC0LajDoPoEADi/giphy.gif"
+            },
+            {
+                text: "Eu não tenho medo de ser uma piada. Eu tenho medo de ser esquecido.",
+                author: "Michael Scott",
+                gif: "https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif"
+            },
+            {
+                text: "Sabe, eu não sou supersticioso, mas sou um pouco esticioso.",
+                author: "Michael Scott",
+                gif: "https://media.giphy.com/media/Dnzwv9s6YkcN2/giphy.gif"
+            },
+            {
+                text: "A vida é curta. Dirija seguro e faça um resumo.",
+                author: "Stanley Hudson",
+                gif: "https://media.giphy.com/media/3oEjHJx8I0z9KMr5ao/giphy.gif"
+            },
+            {
+                text: "Eu quero ser alcançado. Não quero estar sendo gerenciado.",
+                author: "Jim Halpert",
+                gif: "https://media.giphy.com/media/l0MYHCNgMCLBqTFLK/giphy.gif"
+            },
+            {
+                text: "Bears. Beets. Battlestar Galactica.",
+                author: "Jim Halpert",
+                gif: "https://media.giphy.com/media/xT9IgG50Fb7Mi0prBC/giphy.gif"
+            },
+            {
+                text: "IDENTITY THEFT IS NOT A JOKE, JIM! Millions of families suffer every year!",
+                author: "Dwight Schrute",
+                gif: "https://media.giphy.com/media/l46Cy1r1QPAeZUoBu/giphy.gif"
+            },
+            {
+                text: "FALSOS. Eu preciso de você para me ajudar a descobrir quem são.",
+                author: "Dwight Schrute",
+                gif: "https://media.giphy.com/media/26u4cqiYI30juCOGY/giphy.gif"
+            },
+            {
+                text: "FACTOS. Bears eat beets. Bears. Beets. Battlestar Galactica.",
+                author: "Dwight Schrute",
+                gif: "https://media.giphy.com/media/3oEjI7w3RlV2QJbJrW/giphy.gif"
+            },
+            {
+                text: "Eu sou um viciado em trabalho no trabalho. Eu não consigo parar!",
+                author: "Dwight Schrute",
+                gif: "https://media.giphy.com/media/3oEjHJr7tqNTU9xjQY/giphy.gif"
+            },
+            {
+                text: "Pam, tenho uma aliança de casamento com ela. Mas se você me der permissão, eu iria atrás dela como um pato quente.",
+                author: "Michael Scott",
+                gif: "https://media.giphy.com/media/l0MYHCNgMCLBqTFLK/giphy.gif"
+            },
+            {
+                text: "Eu não sou um rosto bonito, não sou um bom corpo, mas eu sou... legal, cara, eu sou engraçado!",
+                author: "Michael Scott",
+                gif: "https://media.giphy.com/media/l0MYC0LajDoPoEADi/giphy.gif"
+            },
+            {
+                text: "Ah, se eu falhasse antes de tentar? Então a única maneira de ter sucesso é tentar!",
+                author: "Michael Scott",
+                gif: "https://media.giphy.com/media/Dnzwv9s6YkcN2/giphy.gif"
+            },
+            {
+                text: "Eu não gosto da ideia de Michael ter duas datas para o jantar. Isso é minha cena de nudez.",
+                author: "Andy Bernard",
+                gif: "https://media.giphy.com/media/l0HlBO7eyXzSZkJri/giphy.gif"
+            },
+            {
+                text: "Eu sou a decisão de negócios mais importante que já fiz.",
+                author: "Michael Scott",
+                gif: "https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif"
+            },
+            {
+                text: "Você não me conhece. Você apenas conhece a versão de mim mesmo que eu escolhi te mostrar.",
+                author: "Kevin Malone",
+                gif: "https://media.giphy.com/media/l0HlBO7eyXzSZkJri/giphy.gif"
+            },
+            {
+                text: "Eu não sou superstiçoso, mas sou um pouco esticioso.",
+                author: "Michael Scott",
+                gif: "https://media.giphy.com/media/3oEjHJx8I0z9KMr5ao/giphy.gif"
+            },
+            {
+                text: "Seria incrível se pudéssemos levar conhecimento e retrocedê-lo para o cérebro.",
+                author: "Kevin Malone",
+                gif: "https://media.giphy.com/media/26u4cqiYI30juCOGY/giphy.gif"
+            },
+            {
+                text: "Eu não acredito que você fez isso. Eu não vou esquecer isso. Vou contar para todo mundo.",
+                author: "Toby Flenderson",
+                gif: "https://media.giphy.com/media/l0HlBO7eyXzSZkJri/giphy.gif"
+            },
+            {
+                text: "Eu não posso acreditar que você me fez isso. Você é o pior.",
+                author: "Michael Scott",
+                gif: "https://media.giphy.com/media/Dnzwv9s6YkcN2/giphy.gif"
+            },
+            {
+                text: "Eu sou um viciado em trabalho no trabalho. Eu não consigo parar!",
+                author: "Stanley Hudson",
+                gif: "https://media.giphy.com/media/3oEjHJx8I0z9KMr5ao/giphy.gif"
+            },
+            {
+                text: "Quando o filho do dono da empresa te chama de idiota, ele provavelmente não é um idiota.",
+                author: "Michael Scott",
+                gif: "https://media.giphy.com/media/l0MYC0LajDoPoEADi/giphy.gif"
+            },
+            {
+                text: "Eu não sou superstiçoso, mas sou um pouco esticioso.",
+                author: "Kevin Malone",
+                gif: "https://media.giphy.com/media/3oEjHJr7tqNTU9xjQY/giphy.gif"
+            }
+        ];
+
+        let currentIndex = -1;
+
+        function generateQuote() {
+            let newIndex;
+            do {
+                newIndex = Math.floor(Math.random() * quotes.length);
+            } while (newIndex === currentIndex && quotes.length > 1);
+            
+            currentIndex = newIndex;
+            const quote = quotes[currentIndex];
+
+            const quoteText = document.getElementById('quoteText');
+            const quoteAuthor = document.getElementById('quoteAuthor');
+            const gifContainer = document.getElementById('gifContainer');
+            const gifImage = document.getElementById('gifImage');
+
+            quoteText.textContent = `"${quote.text}"`;
+            quoteAuthor.textContent = `— ${quote.author}`;
+            gifImage.src = quote.gif;
+            gifImage.alt = `GIF de ${quote.author}`;
+            gifContainer.style.display = 'block';
+
+            quoteText.classList.remove('fade-in');
+            quoteAuthor.classList.remove('fade-in');
+            gifContainer.classList.remove('fade-in');
+
+            setTimeout(() => {
+                quoteText.classList.add('fade-in');
+                quoteAuthor.classList.add('fade-in');
+                gifContainer.classList.add('fade-in');
+            }, 10);
+        }
+
+        // Gera uma frase inicial ao carregar a página
+        window.addEventListener('load', function() {
+            setTimeout(generateQuote, 300);
+        });
+    </script>
+</body>
+</html>
