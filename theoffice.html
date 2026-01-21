@@ -71,20 +71,21 @@
             margin-top: 1rem;
         }
 
-        .gif-container {
+        .character-image-container {
             margin: 2rem 0;
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
+            max-width: 300px;
             margin-left: auto;
             margin-right: auto;
         }
 
-        .gif-container img {
+        .character-image-container img {
             width: 100%;
             height: auto;
             display: block;
+            object-fit: cover;
         }
 
         .generate-btn {
@@ -153,129 +154,151 @@
             <div class="quote-author" id="quoteAuthor"></div>
         </div>
 
-        <div class="gif-container" id="gifContainer" style="display: none;">
-            <img id="gifImage" src="" alt="GIF do personagem">
+        <div class="character-image-container" id="characterContainer" style="display: none;">
+            <img id="characterImage" src="" alt="Foto do personagem">
         </div>
 
         <button class="generate-btn" onclick="generateQuote()">🎲 Nova Frase</button>
     </div>
 
     <script>
+        // Mapeamento de personagens para suas imagens (fotos estáticas dos personagens de The Office)
+        // Usando URLs de imagens estáticas conhecidas dos personagens
+        const characterImages = {
+            "Michael Scott": "https://static.wikia.nocookie.net/theoffice/images/9/9c/MichaelScott.png",
+            "Dwight Schrute": "https://static.wikia.nocookie.net/theoffice/images/c/c5/Dwight_Schrute.jpg",
+            "Jim Halpert": "https://static.wikia.nocookie.net/theoffice/images/9/9a/Jim.jpg",
+            "Pam Beesly": "https://static.wikia.nocookie.net/theoffice/images/6/67/Pam_Beesly.jpg",
+            "Kevin Malone": "https://static.wikia.nocookie.net/theoffice/images/b/b2/2009Kevincropped.PNG",
+            "Stanley Hudson": "https://static.wikia.nocookie.net/theoffice/images/2/23/Stanley_Hudson.jpg",
+            "Andy Bernard": "https://static.wikia.nocookie.net/theoffice/images/8/88/Andy_Bernard.jpg",
+            "Toby Flenderson": "https://static.wikia.nocookie.net/theoffice/images/9/96/Toby_Flenderson.jpg"
+        };
+
         const quotes = [
             {
-                text: "Não me pareça estúpido. É a minha terra. Eu não vou me parecer estúpido na minha terra.",
-                author: "Michael Scott",
-                gif: "https://media.giphy.com/media/l0MYC0LajDoPoEADi/giphy.gif"
+                text: "That's what she said!",
+                author: "Michael Scott"
             },
             {
-                text: "Eu não tenho medo de ser uma piada. Eu tenho medo de ser esquecido.",
-                author: "Michael Scott",
-                gif: "https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif"
+                text: "I'm not superstitious, but I am a little stitious.",
+                author: "Michael Scott"
             },
             {
-                text: "Sabe, eu não sou supersticioso, mas sou um pouco esticioso.",
-                author: "Michael Scott",
-                gif: "https://media.giphy.com/media/Dnzwv9s6YkcN2/giphy.gif"
+                text: "Would I rather be feared or loved? Easy. Both. I want people to be afraid of how much they love me.",
+                author: "Michael Scott"
             },
             {
-                text: "A vida é curta. Dirija seguro e faça um resumo.",
-                author: "Stanley Hudson",
-                gif: "https://media.giphy.com/media/3oEjHJx8I0z9KMr5ao/giphy.gif"
-            },
-            {
-                text: "Eu quero ser alcançado. Não quero estar sendo gerenciado.",
-                author: "Jim Halpert",
-                gif: "https://media.giphy.com/media/l0MYHCNgMCLBqTFLK/giphy.gif"
+                text: "Identity theft is not a joke, Jim! Millions of families suffer every year!",
+                author: "Dwight Schrute"
             },
             {
                 text: "Bears. Beets. Battlestar Galactica.",
-                author: "Jim Halpert",
-                gif: "https://media.giphy.com/media/xT9IgG50Fb7Mi0prBC/giphy.gif"
+                author: "Jim Halpert"
             },
             {
-                text: "IDENTITY THEFT IS NOT A JOKE, JIM! Millions of families suffer every year!",
-                author: "Dwight Schrute",
-                gif: "https://media.giphy.com/media/l46Cy1r1QPAeZUoBu/giphy.gif"
+                text: "I declare bankruptcy!",
+                author: "Michael Scott"
             },
             {
-                text: "FALSOS. Eu preciso de você para me ajudar a descobrir quem são.",
-                author: "Dwight Schrute",
-                gif: "https://media.giphy.com/media/26u4cqiYI30juCOGY/giphy.gif"
+                text: "FACT. Bears eat beets. Bears. Beets. Battlestar Galactica.",
+                author: "Dwight Schrute"
             },
             {
-                text: "FACTOS. Bears eat beets. Bears. Beets. Battlestar Galactica.",
-                author: "Dwight Schrute",
-                gif: "https://media.giphy.com/media/3oEjI7w3RlV2QJbJrW/giphy.gif"
+                text: "You miss 100% of the shots you don't take. - Wayne Gretzky - Michael Scott",
+                author: "Michael Scott"
             },
             {
-                text: "Eu sou um viciado em trabalho no trabalho. Eu não consigo parar!",
-                author: "Dwight Schrute",
-                gif: "https://media.giphy.com/media/3oEjHJr7tqNTU9xjQY/giphy.gif"
+                text: "I'm an early bird and I'm a night owl. So I'm wise and I have worms.",
+                author: "Michael Scott"
             },
             {
-                text: "Pam, tenho uma aliança de casamento com ela. Mas se você me der permissão, eu iria atrás dela como um pato quente.",
-                author: "Michael Scott",
-                gif: "https://media.giphy.com/media/l0MYHCNgMCLBqTFLK/giphy.gif"
+                text: "Sometimes I'll start a sentence and I don't even know where it's going. I just hope I find it along the way.",
+                author: "Michael Scott"
             },
             {
-                text: "Eu não sou um rosto bonito, não sou um bom corpo, mas eu sou... legal, cara, eu sou engraçado!",
-                author: "Michael Scott",
-                gif: "https://media.giphy.com/media/l0MYC0LajDoPoEADi/giphy.gif"
+                text: "I'm Beyoncé, always.",
+                author: "Michael Scott"
             },
             {
-                text: "Ah, se eu falhasse antes de tentar? Então a única maneira de ter sucesso é tentar!",
-                author: "Michael Scott",
-                gif: "https://media.giphy.com/media/Dnzwv9s6YkcN2/giphy.gif"
+                text: "I'm not going to lie to you. I'm going to lie to you.",
+                author: "Michael Scott"
             },
             {
-                text: "Eu não gosto da ideia de Michael ter duas datas para o jantar. Isso é minha cena de nudez.",
-                author: "Andy Bernard",
-                gif: "https://media.giphy.com/media/l0HlBO7eyXzSZkJri/giphy.gif"
+                text: "I'm not a hero. I'm a hero sandwich.",
+                author: "Michael Scott"
             },
             {
-                text: "Eu sou a decisão de negócios mais importante que já fiz.",
-                author: "Michael Scott",
-                gif: "https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif"
+                text: "Question: What kind of bear is best? That's a ridiculous question. False. Black bear.",
+                author: "Dwight Schrute"
             },
             {
-                text: "Você não me conhece. Você apenas conhece a versão de mim mesmo que eu escolhi te mostrar.",
-                author: "Kevin Malone",
-                gif: "https://media.giphy.com/media/l0HlBO7eyXzSZkJri/giphy.gif"
+                text: "I am fast. To give you a reference point, I'm somewhere between a snake and a mongoose. And a panther.",
+                author: "Dwight Schrute"
             },
             {
-                text: "Eu não sou superstiçoso, mas sou um pouco esticioso.",
-                author: "Michael Scott",
-                gif: "https://media.giphy.com/media/3oEjHJx8I0z9KMr5ao/giphy.gif"
+                text: "Through concentration, I can raise and lower my cholesterol at will.",
+                author: "Dwight Schrute"
             },
             {
-                text: "Seria incrível se pudéssemos levar conhecimento e retrocedê-lo para o cérebro.",
-                author: "Kevin Malone",
-                gif: "https://media.giphy.com/media/26u4cqiYI30juCOGY/giphy.gif"
+                text: "I am ready to face any challenges that might be foolish enough to face me.",
+                author: "Dwight Schrute"
             },
             {
-                text: "Eu não acredito que você fez isso. Eu não vou esquecer isso. Vou contar para todo mundo.",
-                author: "Toby Flenderson",
-                gif: "https://media.giphy.com/media/l0HlBO7eyXzSZkJri/giphy.gif"
+                text: "I don't hate it. I just don't like it at all and it's terrible.",
+                author: "Michael Scott"
             },
             {
-                text: "Eu não posso acreditar que você me fez isso. Você é o pior.",
-                author: "Michael Scott",
-                gif: "https://media.giphy.com/media/Dnzwv9s6YkcN2/giphy.gif"
+                text: "I talk a lot, so I've learned to tune myself out.",
+                author: "Michael Scott"
             },
             {
-                text: "Eu sou um viciado em trabalho no trabalho. Eu não consigo parar!",
-                author: "Stanley Hudson",
-                gif: "https://media.giphy.com/media/3oEjHJx8I0z9KMr5ao/giphy.gif"
+                text: "No, I'm not going to tell them about the downsizing. A, not a single person in this room has been downsized. B, I don't know what downsizing means.",
+                author: "Michael Scott"
             },
             {
-                text: "Quando o filho do dono da empresa te chama de idiota, ele provavelmente não é um idiota.",
-                author: "Michael Scott",
-                gif: "https://media.giphy.com/media/l0MYC0LajDoPoEADi/giphy.gif"
+                text: "I love inside jokes. I hope to be a part of one someday.",
+                author: "Michael Scott"
             },
             {
-                text: "Eu não sou superstiçoso, mas sou um pouco esticioso.",
-                author: "Kevin Malone",
-                gif: "https://media.giphy.com/media/3oEjHJr7tqNTU9xjQY/giphy.gif"
+                text: "Well, well, well. How the turntables...",
+                author: "Michael Scott"
+            },
+            {
+                text: "I feel God in this Chili's tonight.",
+                author: "Pam Beesly"
+            },
+            {
+                text: "The worst thing about prison was the dementors.",
+                author: "Michael Scott"
+            },
+            {
+                text: "I have cause. It is beCAUSE I hate him.",
+                author: "Michael Scott"
+            },
+            {
+                text: "The only way I could be dating a hotter woman is if I was dating a hotter woman.",
+                author: "Michael Scott"
+            },
+            {
+                text: "I am running away from my responsibilities. And it feels good.",
+                author: "Michael Scott"
+            },
+            {
+                text: "Do I need to be liked? Absolutely not. I like to be liked. I enjoy being liked. I have to be liked, but it's not like this compulsive need to be liked.",
+                author: "Michael Scott"
+            },
+            {
+                text: "No, I'm not going to tell them about the downsizing. A, not a single person in this room has been downsized. B, I don't know what downsizing means.",
+                author: "Michael Scott"
+            },
+            {
+                text: "Me think, why waste time say lot word when few word do trick.",
+                author: "Kevin Malone"
+            },
+            {
+                text: "Did I stutter?",
+                author: "Stanley Hudson"
             }
         ];
 
@@ -297,18 +320,36 @@
 
             quoteText.textContent = `"${quote.text}"`;
             quoteAuthor.textContent = `— ${quote.author}`;
-            gifImage.src = quote.gif;
-            gifImage.alt = `GIF de ${quote.author}`;
-            gifContainer.style.display = 'block';
+            
+            // Mostra a foto do personagem
+            const characterContainer = document.getElementById('characterContainer');
+            const characterImage = document.getElementById('characterImage');
+            
+            // Busca a imagem do personagem no mapeamento
+            const characterImageUrl = characterImages[quote.author];
+            
+            if (characterImageUrl) {
+                characterImage.src = characterImageUrl;
+                characterImage.alt = `Foto de ${quote.author}`;
+                characterImage.onerror = function() {
+                    // Se a imagem não carregar, usa uma imagem placeholder ou oculta
+                    characterContainer.style.display = 'none';
+                };
+                characterContainer.style.display = 'block';
+            } else {
+                characterContainer.style.display = 'none';
+            }
 
             quoteText.classList.remove('fade-in');
             quoteAuthor.classList.remove('fade-in');
-            gifContainer.classList.remove('fade-in');
+            characterContainer.classList.remove('fade-in');
 
             setTimeout(() => {
                 quoteText.classList.add('fade-in');
                 quoteAuthor.classList.add('fade-in');
-                gifContainer.classList.add('fade-in');
+                if (quote.image) {
+                    characterContainer.classList.add('fade-in');
+                }
             }, 10);
         }
 
